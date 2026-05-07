@@ -1,0 +1,249 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "CryptoSentinel",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ],
+    "paths": {
+        "/api/v1/alert-rules": {
+            "get": {
+                "tags": [
+                    "Alert rules"
+                ],
+                "summary": "List alert rules",
+                "operationId": "5ab5975d671d613bddb6b39dd561756e",
+                "parameters": [
+                    {
+                        "name": "monitored_coin_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Alert rules"
+                ],
+                "summary": "Create alert rule",
+                "operationId": "e8a57f7e7534aa2d894595fed5969e71",
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/v1/alert-rules/{alert_rule}": {
+            "get": {
+                "tags": [
+                    "Alert rules"
+                ],
+                "summary": "Get alert rule",
+                "operationId": "da6a8707a098297bee5974330b2a25bd",
+                "parameters": [
+                    {
+                        "name": "alert_rule",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Alert rules"
+                ],
+                "summary": "Delete alert rule",
+                "operationId": "fac1bbdb252fd2a26767ef3747388058",
+                "parameters": [
+                    {
+                        "name": "alert_rule",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Alert rules"
+                ],
+                "summary": "Patch alert rule",
+                "operationId": "f6e2a82a193f0aaabb98b6553d85f0fb",
+                "parameters": [
+                    {
+                        "name": "alert_rule",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "422": {
+                        "description": "Validation"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/api/v1/monitored-coins": {
+            "get": {
+                "tags": [
+                    "Monitored coins"
+                ],
+                "summary": "List monitored pairs",
+                "operationId": "8e94deacd50c19d4191fd70f70c71903",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Monitored coins"
+                ],
+                "summary": "Create monitored pair",
+                "operationId": "1e414b8cb5436d18432d292466379a70",
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/v1/monitored-coins/{monitored_coin}": {
+            "get": {
+                "tags": [
+                    "Monitored coins"
+                ],
+                "summary": "Get monitored coin",
+                "operationId": "9ff6dd99d788958740e09b1a0cbb598b",
+                "parameters": [
+                    {
+                        "name": "monitored_coin",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Monitored coins"
+                ],
+                "summary": "Delete monitored coin",
+                "operationId": "7e76d53995c1c66080e2c40d51dfc24e",
+                "parameters": [
+                    {
+                        "name": "monitored_coin",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Monitored coins"
+                ],
+                "summary": "Update monitored coin",
+                "operationId": "3c40cf22febbefe33b331361a85dc2a8",
+                "parameters": [
+                    {
+                        "name": "monitored_coin",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Alert rules",
+            "description": "Parâmetros de gatilho e canais"
+        },
+        {
+            "name": "Monitored coins",
+            "description": "CRUD sobre pares spot monitorados"
+        }
+    ]
+}
