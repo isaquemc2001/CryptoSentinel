@@ -41,10 +41,11 @@ final class AlertRuleController extends Controller
     public function index(Request $request): JsonResponse
     {
         $coinFilter = filter_var($request->query('monitored_coin_id'), FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
+        $userId = $request->user()->id;
 
         $rows = array_map(
             static fn (AlertRuleEntity $rule): array => self::serialize($rule),
-            $this->rules->list($coinFilter ?? null),
+            $this->rules->list($userId, $coinFilter ?? null),
         );
 
         return response()->json(['data' => $rows]);
@@ -77,6 +78,7 @@ final class AlertRuleController extends Controller
 
         try {
             $entity = $this->rules->create(
+                user_id: $request->user()->id,
                 monitoredCoinId: $validated['monitored_coin_id'],
                 triggerType: $trigger,
                 thresholdPrice: $validated['threshold_price'] ?? null,
@@ -105,9 +107,11 @@ final class AlertRuleController extends Controller
             new OA\Response(response: 404, description: 'Not Found'),
         ]
     )]
-    public function show(int $alert_rule): JsonResponse
+    public function show(Request $request, int $alert_rule): JsonResponse
     {
-        $rule = $this->rules->find($alert_rule);
+        $userId = $request->user()->id;
+        $rule = $this->rules->find($userId, $alert_rule);
+
         if ($rule === null) {
             abort(JsonResponse::HTTP_NOT_FOUND);
         }
@@ -130,7 +134,9 @@ final class AlertRuleController extends Controller
     )]
     public function update(UpdateAlertRuleRequest $request, int $alert_rule): JsonResponse
     {
-        $existing = $this->rules->find($alert_rule);
+        $userId = $request->user()->id;
+        $existing = $this->rules->find($userId, $alert_rule);
+
         if ($existing === null) {
             abort(JsonResponse::HTTP_NOT_FOUND);
         }
@@ -188,6 +194,7 @@ final class AlertRuleController extends Controller
 
         try {
             $entity = $this->rules->update(
+                userId: $userId,
                 id: $alert_rule,
                 triggerType: $triggerMutation,
                 thresholdPrice: array_key_exists('threshold_price', $validated) ? $thresholdPrice : null,
@@ -216,13 +223,15 @@ final class AlertRuleController extends Controller
             new OA\Response(response: 404, description: 'Not Found'),
         ]
     )]
-    public function destroy(int $alert_rule): JsonResponse
+    public function destroy(Request $request, int $alert_rule): JsonResponse
     {
-        if ($this->rules->find($alert_rule) === null) {
+        $userId = $request->user()->id;
+
+        if ($this->rules->find($userId, $alert_rule) === null) {
             abort(JsonResponse::HTTP_NOT_FOUND);
         }
 
-        $this->rules->delete($alert_rule);
+        $this->rules->delete($userId, $alert_rule);
 
         return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
     }

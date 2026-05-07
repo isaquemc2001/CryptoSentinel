@@ -4,7 +4,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "npx concurrently -c \"cyan,magenta,yellow,green,blue\" \"npm run dev:vite\" \"php artisan serve\" \"php artisan queue:work redis\" \"php artisan reverb:start\" \"php artisan crypto:market-poll\"",
+        "dev:vite": "vite"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",

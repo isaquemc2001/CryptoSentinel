@@ -11,7 +11,7 @@ use App\Domain\Crypto\Enums\NotificationChannel;
 interface AlertRuleRepository
 {
     /** @return list<AlertRule> */
-    public function list(?int $monitoredCoinId = null): array;
+    public function list(int $userId, ?int $monitoredCoinId = null): array;
 
     /** @return list<AlertRule> */
     public function listForCoinSymbol(string $normalizedSymbol): array;
@@ -19,9 +19,10 @@ interface AlertRuleRepository
     /** @return list<AlertRule> active only */
     public function activeForCoinId(int $monitoredCoinId): array;
 
-    public function find(int $id): ?AlertRule;
+    public function find(int $userId, int $id): ?AlertRule;
 
     public function create(
+        int $user_id,
         int $monitoredCoinId,
         AlertTriggerType $triggerType,
         ?string $thresholdPrice,
@@ -34,6 +35,7 @@ interface AlertRuleRepository
 
     public function update(
         int $id,
+        int $userId,
         ?AlertTriggerType $triggerType,
         ?string $thresholdPrice,
         ?string $thresholdPercent,
@@ -43,5 +45,5 @@ interface AlertRuleRepository
         ?bool $active,
     ): AlertRule;
 
-    public function delete(int $id): void;
+    public function delete(int $userId, int $id): void;
 }

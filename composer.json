@@ -83,7 +83,11 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
-        }
+        },
+        "ignore-platform-reqs": [
+            "ext-pcntl",
+            "ext-posix"
+        ]
     },
     "minimum-stability": "stable",
     "prefer-stable": true

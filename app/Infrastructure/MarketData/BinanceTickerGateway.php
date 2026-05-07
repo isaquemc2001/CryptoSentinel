@@ -11,7 +11,11 @@ use RuntimeException;
 
 final class BinanceTickerGateway implements MarketDataGateway
 {
-    private const string BASE_URL = 'https://api.binance.com/api/v3';
+    /**
+     * Summary of BASE_URL
+     * @var string
+     */
+    private const BASE_URL = 'https://api.binance.com/api/v3';
 
     /** @inheritdoc */
     public function snapshotSpotPrices(array $symbolsNormalized): array

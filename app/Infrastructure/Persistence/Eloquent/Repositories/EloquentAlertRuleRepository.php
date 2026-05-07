@@ -15,12 +15,16 @@ use Illuminate\Support\Facades\Cache;
 
 final class EloquentAlertRuleRepository implements AlertRuleRepository
 {
-    private const int ACTIVE_RULES_CACHE_TTL = 60;
+    /**
+     * Summary of ACTIVE_RULES_CACHE_TTL
+     * @var int
+     */
+    private const ACTIVE_RULES_CACHE_TTL = 60;
 
     /** @inheritDoc */
-    public function list(?int $monitoredCoinId = null): array
+    public function list(int $userId, ?int $monitoredCoinId = null): array
     {
-        $builder = AlertRuleModel::query()->orderByDesc('id');
+        $builder = AlertRuleModel::query()->where('user_id', $userId)->orderByDesc('id');
 
         if ($monitoredCoinId !== null) {
             $builder->where('monitored_coin_id', $monitoredCoinId);
@@ -62,14 +66,15 @@ final class EloquentAlertRuleRepository implements AlertRuleRepository
         });
     }
 
-    public function find(int $id): ?AlertRuleEntity
+    public function find(int $userId, int $id): ?AlertRuleEntity
     {
-        $row = AlertRuleModel::query()->find($id);
+        $row = AlertRuleModel::query()->where('user_id', $userId)->find($id);
 
         return $row ? $this->toEntity($row) : null;
     }
 
     public function create(
+        int $user_id,
         int $monitoredCoinId,
         AlertTriggerType $triggerType,
         ?string $thresholdPrice,
@@ -82,6 +87,7 @@ final class EloquentAlertRuleRepository implements AlertRuleRepository
         $this->persistValidation($triggerType, $thresholdPrice, $thresholdPercent, $windowMinutes);
 
         $model = AlertRuleModel::query()->create([
+            'user_id' => $user_id,
             'monitored_coin_id' => $monitoredCoinId,
             'trigger_type' => $triggerType->value,
             'threshold_price' => $thresholdPrice,
@@ -100,6 +106,7 @@ final class EloquentAlertRuleRepository implements AlertRuleRepository
 
     public function update(
         int $id,
+        int $userId,
         ?AlertTriggerType $triggerType,
         ?string $thresholdPrice,
         ?string $thresholdPercent,
@@ -108,7 +115,7 @@ final class EloquentAlertRuleRepository implements AlertRuleRepository
         ?array $payload,
         ?bool $active,
     ): AlertRuleEntity {
-        $rule = AlertRuleModel::query()->findOrFail($id);
+        $rule = AlertRuleModel::query()->where('user_id', $userId)->findOrFail($id);
         $coinId = $rule->monitored_coin_id;
 
         if ($triggerType !== null) {
@@ -154,9 +161,9 @@ final class EloquentAlertRuleRepository implements AlertRuleRepository
             ?? $this->toEntity($rule);
     }
 
-    public function delete(int $id): void
+    public function delete(int $userId, int $id): void
     {
-        $rule = AlertRuleModel::query()->findOrFail($id);
+        $rule = AlertRuleModel::query()->where('user_id', $userId)->findOrFail($id);
         $coinId = $rule->monitored_coin_id;
         $rule->delete();
         $this->invalidateActiveRulesCache((int) $coinId);
